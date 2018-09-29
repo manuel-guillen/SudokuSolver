@@ -1,15 +1,19 @@
 object SudokuSolver {
-	private var stack = List()
+	private var stack = List[Sudoku]()
+	private var reduced = false
+	private var solved = false
 
-	def initialize(val puzzle:Sudoku) {
-		stack = List(puzzle)
+	def initialize(puzzle:Sudoku) {
+		stack = puzzle :: Nil
+		reduced = false
+		solved = false
 	}
 
 	def reduce() {
 		
 	}
 
-	def solve() = {
+	def solve():Sudoku = {
 		while (stack nonEmpty) {
 			val current = stack.head
 			stack = stack.tail
@@ -18,8 +22,11 @@ object SudokuSolver {
 				if (current.isComplete) return current;
 
 				var (row,col) = current.nextCellToAssign()
-				for (num <- current.domain(row,col))
-					stack = current.clone().setCellValue(row,col,num) :: stack
+				for (num <- current.domain(row,col)) {
+					val next = current.clone()
+					next.setCellValue(row,col,num)
+					stack = next :: stack
+				}
 			}
 		}
 		throw new Exception("Invalid Sudoku: No solution possible.")
