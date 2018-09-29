@@ -36,7 +36,7 @@ class Sudoku(val size: Int) {
 					(for (c <- 0 until size) yield board(R)(r)(C)(c)).mkString(" ")
 				).mkString(" | ")
 			).mkString("\n")
-		).mkString("\n" + ("-" * (2*size*(size+1) - 3)) + "\n").
+		).mkString("\n" + Array.fill[String](size)("-" * (2*size-1)).mkString("-+-") + "\n").
 		replaceAll("0",".")
 
 	// ===================================================================================
