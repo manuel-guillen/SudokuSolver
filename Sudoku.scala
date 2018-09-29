@@ -66,14 +66,11 @@ class Sudoku(val size: Int) {
 
 		val t = index(row,col)
 		board(t._1)(t._2)(t._3)(t._4) = value
+		domains(t._1)(t._2)(t._3)(t._4) = BitSet(value)
 
 		unassignedCells -= ((row,col))
 
-		for (i <- 0 until size; j <- 0 until size) {
-			domains(t._1)(t._2)(i)(j) -= value
-			domains(i)(j)(t._3)(t._4) -= value
-			domains(t._1)(i)(t._3)(j) -= value
-		}
+		for (n <- neighborCells(row,col)) domainEliminate(n._1,n._2,value)
 	}
 
 	def domainEliminate(row:Int, col:Int, value:Int) {
