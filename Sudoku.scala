@@ -1,5 +1,9 @@
+import scala.io.Source
+
 import scala.collection.mutable.BitSet
 import scala.collection.mutable.HashSet
+
+// ===================================================
 
 class Sudoku(val size: Int) {
 	private val board = Array.ofDim[Int](size,size,size,size)
@@ -85,7 +89,7 @@ class Sudoku(val size: Int) {
 		domains(t._1)(t._2)(t._3)(t._4).toSet
 	}
 
-	def nextCellToAssign() = unassignedCells.head
+	def nextCellToAssign() = unassignedCells.minBy(x => {val t = index(x._1,x._2); domains(t._1)(t._2)(t._3)(t._4).size})
 
 	def neighborCells(row:Int, col:Int) = {
 		val t = index(row,col) // (R,r,C,c)
@@ -120,4 +124,17 @@ class Sudoku(val size: Int) {
 	def isFeasible = {for(R <- 0 until size; r <- 0 until size; C <- 0 until size; c <- 0 until size) yield domains(R)(r)(C)(c)}.forall(_.nonEmpty) && isValid
 
 	def isComplete = unassignedCells.isEmpty
+}
+
+object Sudoku {
+	def apply(arr: Array[Array[Int]]):Sudoku = {
+		val size = scala.math.sqrt(arr.length).toInt
+		var sudoku = new Sudoku(size)
+
+		for (r <- arr.indices; c <- arr(r).indices if arr(r)(c) > 0) sudoku.setCellValue(r,c,arr(r)(c))
+
+		return sudoku
+	}
+
+	def parseFile(filename: String) = Sudoku(Source.fromFile(filename).getLines.toArray.filterNot(_ contains "-").map(_.replaceAll("\\.","0").split(" ").filterNot(_ contains "|").map(_.toInt)))
 }
