@@ -1,3 +1,5 @@
+package sudoku
+
 object SudokuSolver {
 	private var stack = List[Sudoku]()
 	private var reduced = false

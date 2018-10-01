@@ -1,3 +1,5 @@
+package sudoku
+
 import scala.io.Source
 
 import scala.collection.mutable.BitSet
@@ -133,5 +135,6 @@ object Sudoku {
 		return sudoku
 	}
 
-	def parseFile(filename: String) = Sudoku(Source.fromFile(filename).getLines.toArray.filterNot(_ contains "-").map(_.replaceAll("\\.","0").split(" ").filterNot(_ contains "|").map(_.toInt)))
+	def parseString(str: String) = Sudoku(str.lines.toArray.filterNot(_ contains "-").map(_.replaceAll("\\.","0").split(" ").filterNot(_ contains "|").map(_.toInt)))
+	def parseFile(filename: String) = parseString(Source.fromFile(filename).mkString)
 }
