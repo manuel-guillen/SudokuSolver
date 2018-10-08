@@ -3,7 +3,7 @@ A simple artificial intelligence program for solving a Sudoku puzzle.
 
 ## How to Use
 
-In order to run a main method using the Scala build tool `sbt`, create a `Main.scala` file in the `\src\main\scala` directory. In this file, create an `Main` object extending `App` to create a main method object.
+In order to run a main method using the Scala build tool `sbt`, create a `Main.scala` file in the `\src\main\scala` directory. In this file, create a `Main` object extending `App` to create a main method object.
 
 To use the `SudokuSolver` object, use the `Sudoku.parseString` method to parse a Sudoku string into a `Sudoku` object, or use the `Sudoku.parseFile` method to parse a text file containing a Sudoku board string. Initialize the `SudokuSolver`object with the `Sudoku` object, and run `solve` to get a solved `Sudoku`
 
