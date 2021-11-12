@@ -135,6 +135,6 @@ object Sudoku {
 		return sudoku
 	}
 
-	def parseString(str: String) = Sudoku(str.lines.toArray.filterNot(_ contains "-").map(_.replaceAll("\\.","0").split(" ").filterNot(_ contains "|").map(_.toInt)))
+	def parseString(str: String) = Sudoku(str.linesIterator.toArray.filterNot(_ contains "-").map(_.replaceAll("\\.","0").split(" ").filterNot(_ contains "|").map(_.toInt)))
 	def parseFile(filename: String) = parseString(Source.fromFile(filename).mkString)
 }
