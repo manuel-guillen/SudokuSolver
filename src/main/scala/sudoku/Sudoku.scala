@@ -53,18 +53,18 @@ class Sudoku(val size: Int) {
 
 	def getCellValue(row:Int, col:Int) = {
 		val t = index(row,col)
-		board(t._1)(t._2)(t._3)(t._4);
+		board(t._1)(t._2)(t._3)(t._4)
 	}
 
 	def setCellValue(row:Int, col:Int, value:Int) {
 		if (row < 0 || col < 0 || row >= size*size || col >= size*size)
-			throw new IndexOutOfBoundsException("Row and column indices must be in range [0," + (size*size-1) + "].");
+			throw new IndexOutOfBoundsException("Row and column indices must be in range [0," + (size*size-1) + "].")
 
 		if (!(unassignedCells contains ((row,col)) ))
 			throw new IllegalAccessException("Cell (" + row + "," + col + ") already assigned. Cannot reassign." )
 
 		if (value <= 0 || value > size*size)
-			throw new IllegalArgumentException("Value must be in the range [1," + (size*size) + "].");
+			throw new IllegalArgumentException("Value must be in the range [1," + (size*size) + "].")
 
 		val t = index(row,col)
 		board(t._1)(t._2)(t._3)(t._4) = value
@@ -77,7 +77,7 @@ class Sudoku(val size: Int) {
 
 	def domainEliminate(row:Int, col:Int, value:Int) {
 		if (value <= 0 || value > size*size)
-			throw new IllegalArgumentException("Value must be in the range [1," + (size*size) + "].");
+			throw new IllegalArgumentException("Value must be in the range [1," + (size*size) + "].")
 
 		val t = index(row,col)
 		domains(t._1)(t._2)(t._3)(t._4) -= value
@@ -94,13 +94,13 @@ class Sudoku(val size: Int) {
 		val t = index(row,col) // (R,r,C,c)
 
 		// Cells in same row: (R,r,_,_)
-		val s1 = Set({for(i <- 0 until size; j <- 0 until size) yield cell(t._1,t._2,i,j)} :_*);
+		val s1 = Set({for(i <- 0 until size; j <- 0 until size) yield cell(t._1,t._2,i,j)} :_*)
 
 		// Cells in same column: (_,_,C,c)
-		val s2 = Set({for(i <- 0 until size; j <- 0 until size) yield cell(i,j,t._3,t._4)} :_*);
+		val s2 = Set({for(i <- 0 until size; j <- 0 until size) yield cell(i,j,t._3,t._4)} :_*)
 
 		// Cells in same box: (R,_,C,_)
-		val s3 = Set({for(i <- 0 until size; j <- 0 until size) yield cell(t._1,i,t._3,j)} :_*);
+		val s3 = Set({for(i <- 0 until size; j <- 0 until size) yield cell(t._1,i,t._3,j)} :_*)
 
 		(s1 | s2 | s3)-((row,col))
 	}
@@ -117,7 +117,7 @@ class Sudoku(val size: Int) {
 			if (box.size > box.toSet.size) return false
 		}
 
-		return true
+		true
 	}
 
 	def isFeasible = {for(R <- 0 until size; r <- 0 until size; C <- 0 until size; c <- 0 until size) yield domains(R)(r)(C)(c)}.forall(_.nonEmpty) && isValid
@@ -128,11 +128,11 @@ class Sudoku(val size: Int) {
 object Sudoku {
 	def apply(arr: Array[Array[Int]]):Sudoku = {
 		val size = scala.math.sqrt(arr.length).toInt
-		var sudoku = new Sudoku(size)
+		val sudoku = new Sudoku(size)
 
 		for (r <- arr.indices; c <- arr(r).indices if arr(r)(c) > 0) sudoku.setCellValue(r,c,arr(r)(c))
 
-		return sudoku
+		sudoku
 	}
 
 	def parseString(str: String) = Sudoku(str.linesIterator.toArray.filterNot(_ contains "-").map(_.replaceAll("\\.","0").split(" ").filterNot(_ contains "|").map(_.toInt)))

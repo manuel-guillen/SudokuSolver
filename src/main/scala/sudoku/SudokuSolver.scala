@@ -21,9 +21,9 @@ object SudokuSolver {
 			stack = stack.tail
 
 			if (current.isFeasible) {
-				if (current.isComplete) return current;
+				if (current.isComplete) return current
 
-				var (row,col) = current.nextCellToAssign()
+				val (row,col) = current.nextCellToAssign()
 				for (num <- current.domain(row,col)) {
 					val next = current.clone()
 					next.setCellValue(row,col,num)
