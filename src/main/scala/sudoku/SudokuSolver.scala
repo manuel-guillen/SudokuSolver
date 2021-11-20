@@ -16,7 +16,7 @@ object SudokuSolver {
 	}
 
 	def solve():Sudoku = {
-		while (stack nonEmpty) {
+		while (stack.nonEmpty) {
 			val current = stack.head
 			stack = stack.tail
 
