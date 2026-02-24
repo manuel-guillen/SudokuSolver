@@ -2,6 +2,7 @@ namespace PuzzleSolver.Core.Solver;
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using PuzzleSolver.Core.Model;
 
 /// <summary>
@@ -10,7 +11,7 @@ using PuzzleSolver.Core.Model;
 public static class Solver
 {
     /// <summary>
-    /// Creates a new Solver instance with automatic type inference from the provided puzzle.
+    /// Creates a new ISolver instance with automatic type inference from the provided puzzle.
     /// This method uses reflection to determine the TValue type from the puzzle's base class.
     /// </summary>
     /// <typeparam name="TPuzzle">The puzzle type that inherits from BasePuzzle</typeparam>
@@ -19,34 +20,21 @@ public static class Solver
     public static ISolver<TPuzzle> CreateInstance<TPuzzle>(TPuzzle puzzle)
         where TPuzzle : class
     {
-        // Get the base type that implements BasePuzzle<TValue, TPuzzle>
-        var baseType = typeof(TPuzzle);
-        while (baseType != null && !baseType.IsGenericType)
+        Type? baseType = typeof(TPuzzle);
+        while (baseType?.IsGenericType is false)
         {
             baseType = baseType.BaseType;
         }
-        
-        if (baseType != null && baseType.IsGenericType && baseType.GetGenericTypeDefinition().Name.StartsWith("BasePuzzle"))
+        if (baseType is { Name: string name } && name.StartsWith(nameof(BasePuzzle<,>)) && baseType.GetGenericArguments() is [Type valueType, Type puzzleType])
         {
-            var genericArgs = baseType.GetGenericArguments();
-            if (genericArgs.Length == 2)
-            {
-                var valueType = genericArgs[0]; // TValue
-                var puzzleType = genericArgs[1]; // TPuzzle
-                
-                // Create the generic Solver type
-                var solverType = typeof(DFSSolver<,>).MakeGenericType(puzzleType, valueType);
-                
-                // Create an instance using the internal constructor
-                return (ISolver<TPuzzle>)Activator.CreateInstance(solverType, 
-                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, 
-                    null, 
-                    [puzzle],
-                    null)!;
-            }
+            Type solverType = typeof(DFSSolver<,>).MakeGenericType(puzzleType, valueType);
+            return (ISolver<TPuzzle>)Activator.CreateInstance(solverType,
+                BindingFlags.NonPublic | BindingFlags.Instance,
+                null,
+                [puzzle],
+                null)!;
         }
-        
-        throw new InvalidOperationException($"Unable to determine generic types for puzzle type {typeof(TPuzzle)}");
+        throw new InvalidOperationException($"{typeof(TPuzzle)} is not of the generic type BasePuzzle");
     }
 
     private class DFSSolver<TPuzzle, TValue> : ISolver<TPuzzle>
