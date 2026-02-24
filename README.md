@@ -1,32 +1,36 @@
-# SudokuSolver
-A simple artificial intelligence program for solving a Sudoku puzzle.
+# PuzzleSolver
+A simple constraint propagation + domain reduction implementation for solving a Constraint Satisfaction Problem (CSP) puzzles (ex. Sudoku)
 
-## How to Use
+## Example Usage
 
-In order to run a main method using the Scala build tool `sbt`, create a `Main.scala` file in the `\src\main\scala` directory. In this file, create a `Main` object extending `App` to create a main method object.
-
-To use the `SudokuSolver` object, use the `Sudoku.parseString` method to parse a Sudoku string into a `Sudoku` object, or use the `Sudoku.parseFile` method to parse a text file containing a Sudoku board string. Initialize the `SudokuSolver`object with the `Sudoku` object, and run `solve` to get a solved `Sudoku`
+The below example is the single main program file (using top-level statements) of a C# console application. Taking a dependency on the `PuzzleSolver.Core` module, 
+we import the namespaces for the puzzle models and for the solver. We make use of a string parsing `Sudoku` static method in the example below, which only focuses on
+digits, letters, and `.` (to denote empty). The rest of the characters are to make the string look nice.
 
 #### Example
 
-```sh
-import sudoku._
+```csharp
+using PuzzleSolver.Core.Model.Puzzles;
+using PuzzleSolver.Core.Solver;
 
-object Main extends App {
-	val s = ". 2 . | . . . | . . ."   + "\n" +
-		". . . | 6 . . | . . 3"   + "\n" +
-		". 7 4 | . 8 . | . . ."   + "\n" +
-		"------+-------+------"   + "\n" +
-		". . . | . . 3 | . . 2"   + "\n" +
-		". 8 . | . 4 . | . 1 ."   + "\n" +
-		"6 . . | 5 . . | . . ."   + "\n" +
-		"------+-------+------"   + "\n" +
-		". . . | . 1 . | 7 8 ."   + "\n" +
-		"5 . . | . . 9 | . . ."   + "\n" +
-		". . . | . . . | . 4 ."
+string s = """
+9 . . | 7 . 1 | 8 . .
+. . 4 | 5 . . | . . 2
+. . 6 | . . 3 | . . .
+------+-------+------
+2 7 9 | . . 5 | . 6 .
+. . 5 | . . 8 | 7 . .
+. . . | . . . | . . .
+------+-------+------
+4 . . | 2 9 . | . 3 1
+. 2 . | . . . | . 8 .
+3 . . | . . . | . . .
+""";
 
-	val b = Sudoku.parseString(s)
-	SudokuSolver.initialize(b)
-	println(SudokuSolver.solve())
-}
+Sudoku puzzle = Sudoku.Parse(s);
+Console.WriteLine($"{puzzle}\n");
+
+ISolver<Sudoku> solver = Solver.CreateInstance(puzzle);
+if (solver.TrySolve(out Sudoku? solution))
+    Console.WriteLine($"SOLUTION:\n{solution}");
 ```
