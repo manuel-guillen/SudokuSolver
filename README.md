@@ -1,5 +1,5 @@
 # PuzzleSolver
-A simple constraint propagation + domain reduction implementation for solving a Constraint Satisfaction Problem (CSP) puzzles (ex. Sudoku)
+A simple constraint propagation + domain reduction implementation for solving Constraint Satisfaction Problem (CSP) puzzles (ex. Sudoku)
 
 ## Example Usage
 
